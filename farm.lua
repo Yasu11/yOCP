@@ -1,10 +1,12 @@
 require("farmlib")
-k= require("keyboard")
+local k= require("keyboard")
 
-l=9
-w=9
+local l=9
+local w=9
 
-stop = false
+local stop = false
+
+m.broadcast(fport, "Autofarming started")
 
 while true do
     goToStart()
@@ -21,3 +23,5 @@ while true do
     end
     if stop then break end
 end
+
+m.broadcast(fport, "Autofarming stoped")

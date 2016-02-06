@@ -8,6 +8,8 @@ os = require("os")
 t  = require("term")
 m  = c.modem
 
+fport = 235
+
 function getInvRat()
 	iS = r.inventorySize()
 	iL = 0
@@ -53,6 +55,7 @@ end
 
 local function throwError()
 	sound("error")
+    m.broadcast(fport,"ERROR")
 end
 
 local function forward ()
@@ -87,7 +90,7 @@ function farmLine (length)
 		forward()
 	end
 	farm()
-    m.broadcast(1111,tostring(getInventoryLevel()))
+    m.broadcast(fport,"IR:" .. getInvRat())
 end
 
 function switchLeft()
@@ -149,6 +152,7 @@ end
 -- of the first field
 function goToStart()
 	sound("start")
+    m.broadcast(fport,"start")
 	forward()
 	forward()
 	r.down()
@@ -190,6 +194,7 @@ function returnToHome(length)
 	forward()
 	r.turnAround()
 	sound("end")
+    m.broadcast(fport,"end")
 end
 
 -- EOF
