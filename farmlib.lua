@@ -8,7 +8,7 @@ os = require("os")
 t  = require("term")
 m  = c.modem
 
-fport = 235
+local fport = 235
 
 function getInvRat()
 	iS = r.inventorySize()
@@ -81,7 +81,6 @@ local function farm ()
 end
 
 function farmLine (length)
-    t.write(getInventoryLevel())
 	if length < 1 then
 		return
 	end

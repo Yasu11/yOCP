@@ -6,6 +6,8 @@ local w=9
 
 local stop = false
 
+local fport = 235
+
 m.broadcast(fport, "Autofarming started")
 
 while true do
