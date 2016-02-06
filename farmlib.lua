@@ -6,6 +6,40 @@ r1 = c.proxy(c.list("robot")())
 n  = require("note")
 os = require("os")
 
+function sound(a)
+    if a=="error" then
+        n.play("A4",0.2)
+        os.sleep(0.1)
+        n.play("A4",0.2)
+        os.sleep(0.1)
+        n.play("A4",0.2)
+    elseif a == "attention" then
+        n.play("C3",0.3)
+        os.sleep(0.1)
+        n.play("C3",0.3)
+    elseif a == "beep" then
+        n.play("C3",0.1)
+        os.sleep(0.05)
+        n.play("C3",0.1)
+    elseif a == "start" then
+        n.play("C3",0.1)
+        os.sleep(0.05)
+        n.play("E3",0.1)
+        os.sleep(0.05)
+        n.play("G3",0.1)
+        os.sleep(0.05)
+        n.play("C4",0.1)
+    elseif a == "end" then
+        n.play("C4",0.1)
+        os.sleep(0.05)
+        n.play("G3",0.1)
+        os.sleep(0.05)
+        n.play("E3",0.1)
+        os.sleep(0.05)
+        n.play("C3",0.1)
+    end
+end
+
 function forward ()
 	b = false
 	while true do
@@ -13,7 +47,8 @@ function forward ()
 		if b then
 			return
 		end
-			os.sleep(0.2)
+        sound("beep")
+		os.sleep(0.2)
 	end
 end
 
@@ -33,18 +68,22 @@ function farmLine (length)
 end
 
 function switchLeft()
+    sound("attention")
     r.turnLeft()
     forward()
     r.turnLeft()
 end
 
 function switchRight()
+    sound("attention")
     r.turnRight()
     forward()
     r.turnRight()
 end
 
-function farmSquare (length, width)
+-- farms a field from the lower left
+-- ends on upper right
+function farmRect(length, width)
     if width < 1 then
         return
     end
@@ -60,34 +99,78 @@ function farmSquare (length, width)
         end
         farmLine(length)
     end    
+    
+    if width % 2 == 0 then
+    r.turnAround()        
+        for i=1, length do
+            forward()
+        end
+    end
 end
 
-function switchField()
+function switchField(width)
+    sound("attention")
     r.up()
     forward()
     forward()
     forward()
     r.down()
     r.turnLeft()
-    for i=1, 8 do
+    for i=1, width-1 do
         forward()
     end
     r.turnRight()
 end
 
 function dumpInventory()
+    os.sleep(20)
+end
+
+-- goes to the lower left 
+-- of the first field
+function goToStart()
+    sound("start")
+    forward()
+    forward()
+    r.down()
+    r.down()
+    r.down()
     r.turnLeft()
     forward()
     forward()
     forward()
     forward()
     r.turnRight()
-    r.up()
-    r.up()
-    forward()
-    forward()
-    r.turnAround()
 end
 
-farmSquare(9,9)
-dumpInventory()
+function returnToHome(length)
+    r.turnAround()
+    for i=1, length-1 do
+        forward()
+    end
+    
+    sound("attention")
+    r.up()
+    forward()
+    forward()
+    forward()
+    r.down()
+    
+    for i=1, length-1 do
+        forward()
+    end
+    r.turnRight()
+    for i=1, length/2 do
+        forward()
+    end
+    r.turnLeft()
+    r.up()
+    forward()
+    r.up()
+    r.up()
+    forward()
+    r.turnAround()
+    sound("end")
+end
+
+-- EOF
